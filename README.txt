@@ -24,8 +24,7 @@
 
 ## Database Setup
 - Database creation script: `/create_database.sql`
-- Set the database connection details in the `src\main\resources\hibernate.cfg.xml` file
-
+- Set the database connection details in the `src/main/resources/hibernate.cfg.xml` file
 
 ## API Specifications
 
