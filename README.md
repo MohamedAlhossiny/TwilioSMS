@@ -1,5 +1,10 @@
 # TwilioSMS System Design
 
+## Project Description
+
+TwilioSMS is a robust SMS management system that integrates with Twilio's messaging services to provide a comprehensive platform for sending and managing SMS messages. The system offers user authentication, message tracking, and verification code services through a well-structured API architecture.
+
+
 ## Core Components
 
 - **API Layer**
