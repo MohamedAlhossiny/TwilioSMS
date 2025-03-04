@@ -108,6 +108,29 @@ public class UserController {
         }
     }
 
+    @GET
+    @Path("/checkSession")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response checkSession() {//tested
+        HttpSession session = request.getSession(false);
+        if (session != null && session.getAttribute("id") != null) {
+            return Response.ok().build(); // Session valid
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED).build(); // Session expired
+        }
+    }
+
+    @POST
+    @Path("/logout")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response logout() {//tested
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();   
+        }
+        return Response.ok().build();
+    }
+
     @PUT
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)

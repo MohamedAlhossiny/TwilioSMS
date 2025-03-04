@@ -1,8 +1,15 @@
 document.addEventListener("DOMContentLoaded", function () {
 
-    if(document.cookie.includes("JSESSIONID")){
-        window.location.href = '/sms/Pages/customer.html';
-    }
+    fetch('/sms/api/user/checkSession')
+        .then(response => {
+            if (response.ok) {
+                window.location.href = '/sms/Pages/customer.html';
+            }
+        })
+        .catch(error => {
+            console.error('Error checking session:', error);
+        });
+
     const form = document.getElementById("signup-form");
 
     if (form) {
@@ -85,6 +92,7 @@ document.addEventListener("DOMContentLoaded", function () {
         document.querySelectorAll(".error-message").forEach(error => error.remove());
     }
 });
+
 
 
 async function registerAndLoginUser(userInfo, twilioInfo) {
