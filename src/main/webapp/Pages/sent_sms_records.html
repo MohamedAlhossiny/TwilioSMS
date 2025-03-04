@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Sent SMS</title>
+    <link rel="stylesheet" href="../Styles/admin_styles.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <nav class="sidebar">
+            <h2>Admin Dashboard</h2>
+            <ul>
+                <li><a href="manage_customers.html">Manage Customers</a></li>
+                <li><a href="view_statistics.html">View SMS Statistics</a></li>
+                <li><a href="sent_sms_records.html" class="active">View Sent SMS</a></li>
+                <li><button onclick="logout()" class="logout-btn">Logout</button></li>
+            </ul>
+        </nav>
+        
+        <main class="content">
+            <h2>Sent SMS Records</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>SMS ID</th>
+                        <th>Customer Name</th>
+                        <th>Phone</th>
+                        <th>Message</th>
+                        <th>Date Sent</th>
+                    </tr>
+                </thead>
+                <tbody id="sms-records-list">
+  
+                </tbody>
+            </table>
+        </main>
+    </div>
+
+    <script src="../Scripts/sent_sms_records.js"></script>
+</body>
+</html>

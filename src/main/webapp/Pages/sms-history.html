@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMS History</title>
+    <link rel="stylesheet" href="../Styles/ad_cu.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
+            z-index: 1001;
+            text-align: center;
+        }
+        
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+        }
+        
+
+        .popup button {
+            margin: 10px;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .popup .confirm {
+            background-color: #f44336;
+            color: white;
+            margin: auto;
+            margin-bottom: 7px;
+        }
+
+        .popup .cancel {
+            background-color: black;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard" style="margin-top: 10px; width: 700px;">
+        <h2>SMS History</h2>
+
+        <div class="search-container">
+            <input type="text" id="search-sender" class="search-input" placeholder="Search by recipient number...">
+            <input type="text" id="search-message" class="search-input" placeholder="Search by message...">
+            <input type="date" id="search-date" class="date-input">
+            <button onclick="searchSMS()" class="search-button"><i class="fas fa-search"></i> Search</button>
+        </div>
+
+        <div id="sms-history" class="sms-history-container"></div>
+        <button onclick="goBack()" class="back-button"><i class="fas fa-arrow-left"></i> Go Back</button>
+    </div>
+
+    <div id="popup-overlay" class="popup-overlay"></div>
+
+    <div id="delete-popup" class="popup">
+        <p>Are you sure you want to delete this SMS?</p>
+        <button class="confirm" onclick="confirmDelete()">OK</button>
+        <button class="cancel" onclick="closePopup()">Cancel</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchSMSHistory();
+        });
+
+        let smsData = [
+            { id: 1, to: "+123456789", message: "Hello there!", date: "2025-02-17 10:00" },
+            { id: 2, to: "+987654321", message: "Good morning!", date: "2025-02-16 09:30" }
+        ];
+        
+        let deleteId = null;
+
+        function fetchSMSHistory(filteredData = smsData) {
+            const historyContainer = document.getElementById("sms-history");
+            historyContainer.innerHTML = "";
+
+            if (filteredData.length > 0) {
+                filteredData.forEach(sms => {
+                    const smsItem = document.createElement("div");
+                    smsItem.classList.add("sms-item");
+                    smsItem.innerHTML = `
+                        <p><strong>To:</strong> ${sms.to} <br>
+                        <strong>Message:</strong> ${sms.message} <br>
+                        <strong>Date:</strong> ${sms.date}</p>
+                        <button style="background-color: red; margin-bottom: 5px;" onclick="openPopup(${sms.id})" class="delete-button">
+                            <i class="fas fa-trash-alt"></i> Delete
+                        </button>
+                    `;
+                    historyContainer.appendChild(smsItem);
+                });
+            } else {
+                historyContainer.innerHTML = "<p>No results found.</p>";
+            }
+        }
+
+        function openPopup(smsId) {
+            deleteId = smsId;
+            document.getElementById("delete-popup").style.display = "block";
+            document.getElementById("popup-overlay").style.display = "block";
+        }
+
+        function closePopup() {
+            document.getElementById("delete-popup").style.display = "none";
+            document.getElementById("popup-overlay").style.display = "none";
+        }
+
+        function confirmDelete() {
+            if (deleteId !== null) {
+                smsData = smsData.filter(sms => sms.id !== deleteId);
+                fetchSMSHistory();
+            }
+            closePopup();
+        }
+
+        function searchSMS() {
+            const senderSearch = document.getElementById("search-sender").value.trim();
+            const messageSearch = document.getElementById("search-message").value.trim().toLowerCase();
+            const dateSearch = document.getElementById("search-date").value.trim();
+
+            const filteredData = smsData.filter(sms => {
+                const smsDate = sms.date.split(" ")[0]; 
+
+                return (
+                    (!senderSearch || sms.to.includes(senderSearch)) &&
+                    (!messageSearch || sms.message.toLowerCase().includes(messageSearch)) &&
+                    (!dateSearch || smsDate === dateSearch)
+                );
+            });
+
+            fetchSMSHistory(filteredData);
+        }
+
+        function goBack() {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = "customer.html"; 
+            }
+        }
+    </script>
+</body>
+</html>

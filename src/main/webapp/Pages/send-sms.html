@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send SMS</title>
+    <link rel="stylesheet" href="../Styles/ad_cu.css">
+</head>
+<body>
+    <div style="margin-top: 30px;" class="dashboard">
+        <h2>Send SMS</h2>
+        <form id="smsForm">
+            <label for="from-number">From:</label>
+            <input type="text" id="from-number" name="from-number" required>
+
+            <label for="to-number">To:</label>
+            <input type="text" id="to-number" name="to-number" required>
+
+            <label for="message">Message:</label>
+            <textarea style="width: 280px; height: 150px; font-size: 20px;" id="message" name="message" required></textarea>
+
+            <button type="submit">Send SMS</button>
+        </form>
+        <p id="response-message"></p>
+        <button onclick="goBack()">Go Back</button>
+    </div>
+
+    <script>
+        document.getElementById('smsForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const fromNumber = document.getElementById('from-number').value;
+            const toNumber = document.getElementById('to-number').value;
+            const message = document.getElementById('message').value;
+            sendSMS(fromNumber, toNumber, message);
+        });
+
+        function sendSMS(from, to, message) {
+            fetch('/api/send-sms', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ from, to, message })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('response-message').innerText = data.message;
+            })
+            .catch(error => {
+                document.getElementById('response-message').innerText = "Failed to send SMS.";
+            });
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</body>
+</html>

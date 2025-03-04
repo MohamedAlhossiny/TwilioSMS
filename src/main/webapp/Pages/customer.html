@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard</title>
+    <link rel="stylesheet" href="../Styles/ad_cu.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+        .sidebar {
+            width: 250px;
+            background: #333;
+            color: white;
+            padding: 20px;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            padding: 10px;
+            border-bottom: 1px solid #444;
+        }
+
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            display: block;
+        }
+
+        .sidebar ul li a:hover {
+            background: #444;
+        }
+
+        .sidebar ul li button {
+            width: 100%;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            text-align: left;
+            padding: 10px;
+        }
+
+        .sidebar ul li button:hover {
+            background: #444;
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px;
+            background: #f4f4f4;
+        }
+
+        #content-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h2>Welcome, <span id="username-display"></span></h2>
+            <ul>
+                <li><a href="profile.html" onclick="loadPage(event, 'profile.html')">Profile</a></li>
+                <li><a href="send-sms.html" onclick="loadPage(event, 'send-sms.html')">Send SMS</a></li>
+                <li><a href="sms-history.html" onclick="loadPage(event, 'sms-history.html')">SMS History</a></li>
+                <li><button onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button></li>
+            </ul>
+        </div>
+        <div class="content">
+            <iframe id="content-frame" src="profile.html"></iframe>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const userRole = localStorage.getItem("userRole");
+            const username = localStorage.getItem("username");
+
+            if (userRole !== "customer") {
+                alert("Unauthorized access!");
+                window.location.href = "index.html";
+            }
+
+            document.getElementById("username-display").innerText = username || "Customer";
+        });
+
+        function loadPage(event, page) {
+            event.preventDefault(); 
+            document.getElementById("content-frame").src = page;
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = "index.html";
+        }
+    </script>
+</body>
+</html>
+

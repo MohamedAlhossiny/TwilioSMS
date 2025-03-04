@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <!-- <link rel="stylesheet" href="../styles/profile.css"> -->
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 80%;
+            font-family: 'Poppins', Arial, sans-serif;
+            margin: 0;
+            padding: 50px;
+            background: url('../Images/background.jpg') no-repeat center center/cover;
+        }
+        
+        .container {
+            width: 90%;
+            padding: 25px;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.6);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            color: white;
+        }
+        
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 25px;
+            font-weight: bold;
+            color: white;
+        }
+        
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        label {
+            margin-top: 12px;
+            margin-left: 14px;
+            font-weight: bold;
+            font-size: 14px;
+            color: white;
+        }
+        input {
+            width: 94%;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            margin-top: 5px;
+            margin: auto;
+            border: 1px solid #bbb;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            color: white;
+            outline: none;
+        }
+        
+        input:focus {
+            border-color: #4ca1af;
+            box-shadow: 0px 0px 5px rgba(76, 161, 175, 0.5);
+            outline: none;
+        }
+        
+        button {
+            margin-top: 15px;
+            padding: 12px;
+            background: #4ca1af;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background 0.3s ease-in-out, transform 0.2s;
+        }
+        
+        button:hover {
+            background: #2c3e50;
+            transform: scale(1.02);
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                width: 100%;
+                padding: 15px;
+            }
+            
+            button {
+                font-size: 14px;
+                padding: 10px;
+            }
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Profile</h2>
+        <form id="profile-form">
+            <label for="name">Full Name:</label>
+            <input type="text" id="name" required>
+
+            <label for="dob">Date of Birth:</label>
+            <input type="date" id="dob" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" required>
+
+            <label for="phone">Phone Number (MSISDN):</label>
+            <input type="text" id="phone" required>
+
+            <label for="address">Address:</label>
+            <input type="text" id="address" required>
+
+            <label for="twilio-sid">Twilio Account SID:</label>
+            <input type="text" id="twilio-sid" required>
+
+            <label for="twilio-token">Twilio Token:</label>
+            <input type="password" id="twilio-token" required>
+
+            <label for="twilio-sender">Twilio Sender ID:</label>
+            <input type="text" id="twilio-sender" required>
+
+            <button type="submit">Update Profile</button>
+        </form>
+    </div>
+    <script src="../Scripts/profile.js"></script>
+</body>
+</html>
