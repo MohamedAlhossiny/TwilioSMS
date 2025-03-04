@@ -98,7 +98,7 @@ const date = new Date()
 | Method | Endpoint | Description | Request Body | Response Body | Response Status | Permissions |
 |--------|----------|-------------|--------------|---------------|-----------------|-------------|
 | POST | `/sms/api/verificationCode/send` | Send verification code | None | None | 200 OK (sent) / 400 Bad Request / 401 UNAUTHORIZED | User himself |
-| POST | `/sms/api/verificationCode/verify` | Verify code | `{verification_code: string}` | None | 200 OK (verified) / 400 Bad Request (Not verified) | User himself |
+| POST | `/sms/api/verificationCode/verify` | Verify code | `{verification_code: Integer}` | None | 200 OK (verified) / 400 Bad Request (Not verified) | User himself |
 
 ### Message Handling
 
