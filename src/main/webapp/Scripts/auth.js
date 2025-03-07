@@ -1,60 +1,103 @@
 document.addEventListener("DOMContentLoaded", function () {
+
+    fetch('/sms/api/user/checkSession')
+    .then(async response => {
+        if (response.ok) {
+            let user = await response.json();
+            if(user.role === "admin"){
+                window.location.href = '/sms/Pages/manage_customers.html';
+            }else{
+                window.location.href = '/sms/Pages/customer.html';
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Error checking session:', error);
+    });
+
     const loginForm = document.getElementById("login-form");
 
     if (loginForm) {
         loginForm.addEventListener("submit", function (event) {
             event.preventDefault();
-            console.log("Login form submitted");
 
             const username = document.getElementById("username").value.trim();
             const password = document.getElementById("password").value.trim();
 
-            console.log("Entered Username:", username);
-            console.log("Entered Password:", password);
 
-            clearErrors();
+            clearMessage();
 
-            const users = {
-                admin: { password: "123456", role: "admin" },
-                customer: { password: "customer123", role: "customer" }
-            };
-
-            if (!users[username.toLowerCase()]) {
-                console.log("Username not found:", username);
-                showError("username", "Invalid username or password");
+            if (!username || !password) {
+                showMessage("Please enter a valid username and password", "error");
                 return;
             }
+            preformLogin(username, password);
 
-            if (users[username.toLowerCase()].password !== password) {
-                console.log("Incorrect password for:", username);
-                showError("password", "Invalid username or password");
-                return;
-            }
-
-            let userRole = users[username.toLowerCase()].role;
-            console.log("User Role:", userRole);
-
-            localStorage.setItem("userRole", userRole);
-            localStorage.setItem("username", username);
-
-            const redirectPage = userRole === "admin" ? "manage_customers.html" : "customer.html";
-            console.log("Redirecting to:", redirectPage);
-            window.location.href = redirectPage;
         });
     }
 
-    function showError(fieldId, message) {
-        const inputField = document.getElementById(fieldId);
-        if (!inputField.parentNode.querySelector(".error-message")) {
-            const error = document.createElement("small");
-            error.classList.add("error-message");
-            error.style.color = "red";
-            error.innerText = message;
-            inputField.parentNode.appendChild(error);
+    async function preformLogin(username, password) {
+        
+        let loginResponse = await fetch('/sms/api/user/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                username: username,
+                passwd: password
+            }),
+            credentials: 'include'
+        });
+
+        let user = await loginResponse.json();
+
+        if (!loginResponse.ok) {
+            showMessage("Login failed, please check your username and password", "error");
+            throw new Error('Login failed');
+        }
+        if(user.role === "admin"){
+            window.location.href = '/sms/Pages/manage_customers.html';
+        }else{
+            window.location.href = '/sms/Pages/customer.html';
         }
     }
-
-    function clearErrors() {
-        document.querySelectorAll(".error-message").forEach(error => error.remove());
-    }
 });
+
+
+function showMessage(message, type) {
+    // Remove any existing message
+    const existingMessage = document.querySelector('.message');
+    if (existingMessage) {
+        existingMessage.remove();
+    }
+
+    const messageDiv = document.createElement('div');
+    messageDiv.classList.add('message');
+    messageDiv.style.padding = '10px';
+    messageDiv.style.marginTop = '10px';
+    messageDiv.style.borderRadius = '4px';
+    messageDiv.style.textAlign = 'center';
+    
+    if (type === "success") {
+        messageDiv.style.backgroundColor = '#d4edda';
+        messageDiv.style.color = '#155724';
+        messageDiv.style.border = '1px solid #c3e6cb';
+    } else {
+        messageDiv.style.backgroundColor = '#f8d7da';
+        messageDiv.style.color = '#721c24';
+        messageDiv.style.border = '1px solid #f5c6cb';
+    }
+    
+    messageDiv.textContent = message;
+    
+    // Insert after the form
+    const form = document.getElementById('login-form');
+    form.parentNode.insertBefore(messageDiv, form.nextSibling);
+}
+
+function clearMessage(){
+    const messageDiv = document.querySelector('.message');
+    if (messageDiv) {
+        messageDiv.remove();
+    }
+}
+

@@ -113,8 +113,9 @@ public class UserController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response checkSession() {//tested
         HttpSession session = request.getSession(false);
-        if (session != null && session.getAttribute("id") != null) {
-            return Response.ok().build(); // Session valid
+        if (session != null) {
+            User user = userService.findById((Integer) session.getAttribute("id"));
+            return Response.ok(user).build(); // Session valid
         } else {
             return Response.status(Response.Status.UNAUTHORIZED).build(); // Session expired
         }

@@ -1,17 +1,25 @@
 document.addEventListener("DOMContentLoaded", function () {
-    checkUserRole("customer");
+    fetch('/sms/api/user/checkSession',
+        {
+            method: 'GET',
+            credentials: 'include'
+        }
+    )
+    .then(response => {
+        if (!response.ok) {
+            window.location.href = "/sms/Pages/index.html";
+        }
+    })
+    .catch(error => {
+        console.error('Error checking session:', error);
+    });
 
     initializeSendSMS();
     loadSMShistory();
     setupSearchSMS();
 });
 
-function checkUserRole(expectedRole) {
-    const role = localStorage.getItem("userRole");
-    if (role !== expectedRole) {
-        window.location.href = "index.html"; 
-    }
-}
+
 
 function initializeSendSMS() {
     const sendSMSForm = document.getElementById("send-sms-form");
@@ -28,9 +36,40 @@ function initializeSendSMS() {
                 alert("All fields are required!");
                 return;
             }
-
+            clearMessage();
             sendSMS(from, to, message);
         });
+    }
+}
+
+function showMessage(message, type) {
+    const messageDiv = document.createElement('div');
+    messageDiv.classList.add('message');
+    messageDiv.style.padding = '10px';
+    messageDiv.style.marginTop = '10px';
+    messageDiv.style.borderRadius = '4px';
+    messageDiv.style.textAlign = 'center';
+
+    if (type === 'success') {
+        messageDiv.style.backgroundColor = '#d4edda';
+        messageDiv.style.color = '#155724';
+        messageDiv.style.border = '1px solid #c3e6cb';
+    } else {
+        messageDiv.style.backgroundColor = '#f8d7da';
+        messageDiv.style.color = '#721c24';
+        messageDiv.style.border = '1px solid #f5c6cb';
+    }   
+    
+    messageDiv.textContent = message;
+
+    const form = document.getElementById('send-sms-form');
+    form.parentNode.insertBefore(messageDiv, form.nextSibling);
+}
+
+function clearMessage(){
+    const messageDiv = document.querySelector('.message');
+    if (messageDiv) {
+        messageDiv.remove();
     }
 }
 
@@ -43,6 +82,7 @@ function sendSMS(from, to, message) {
         headers: {
             'Content-Type': 'application/json'
         },
+        credentials: 'include',
         body: JSON.stringify({ from, to, message })
     })
     .then(response => response.json())

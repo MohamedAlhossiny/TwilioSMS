@@ -1,3 +1,13 @@
+fetch('/sms/api/user/checkSession')
+.then(response => {
+    if (!response.ok) {
+        window.location.href = '../Pages/index.html';
+    }
+})
+.catch(error => {
+    console.error('Error checking session:', error);
+});
+
 let customers = [
     { id: 1, name: 'Yasmeen', birthday: '1999-01-01', phone: '+1234567890', job: 'Developer', email: 'yasmeen@example.com', address: 'Cairo, Egypt', smsSent: 15 },
     { id: 2, name: 'Mahmoud', birthday: '2000-05-20', phone: '+0987654321', job: 'Designer', email: 'mahmoud@example.com', address: 'Alexandria, Egypt', smsSent: 10 },

@@ -1,14 +1,14 @@
 document.addEventListener("DOMContentLoaded", function () {
 
     fetch('/sms/api/user/checkSession')
-        .then(response => {
-            if (response.ok) {
-                window.location.href = '/sms/Pages/customer.html';
-            }
-        })
-        .catch(error => {
-            console.error('Error checking session:', error);
-        });
+    .then(response => {
+        if (response.ok) {
+            window.location.href = '/sms/Pages/customer.html';
+        }
+    })
+    .catch(error => {
+        console.error('Error checking session:', error);
+    });
 
     const form = document.getElementById("signup-form");
 
