@@ -22,6 +22,7 @@ CREATE TABLE TwilioAccount (
     sender_id     CHAR(15),
     phone_number  CHAR(15),
     isVerified	  BOOLEAN NOT NULL,
+    number_of_msg INT DEFAULT 0,
     user_id       INT,
     CONSTRAINT fk_twilio_user
         FOREIGN KEY (user_id)
