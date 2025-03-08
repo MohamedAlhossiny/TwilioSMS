@@ -46,15 +46,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 passwd: password
             }),
             credentials: 'include'
+        }).then(response => {
+            if (!response.ok) {
+                showMessage("Login failed, please check your username and password", "error");
+                throw new Error('Login failed');
+            }else{
+                return response.json();
+            }
+        }).catch(error => {
+            console.error('Error checking session:', error);
         });
-
-        let user = await loginResponse.json();
-
-        if (!loginResponse.ok) {
-            showMessage("Login failed, please check your username and password", "error");
-            throw new Error('Login failed');
-        }
-        if(user.role === "admin"){
+        if(loginResponse.role === "admin"){
             window.location.href = '/sms/Pages/manage_customers.html';
         }else{
             window.location.href = '/sms/Pages/customer.html';

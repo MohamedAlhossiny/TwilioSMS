@@ -85,14 +85,13 @@ body {
     transform: scale(1.05);
 }
 
+
 #error-message {
     color: red;
-    font-size: 13px;
-    margin-top: 5px;
-    /* opacity: 0; */
-    /* transition: opacity 0.3s ease-in-out; */
+    font-size: 18px;
+    margin-top: 10px;
+    margin-bottom: -10px;
 }
-
 #error-message.show {
     /* opacity: 1; */
 }

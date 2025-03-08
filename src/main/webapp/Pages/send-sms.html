@@ -36,19 +36,23 @@
         });
 
         function sendSMS(from, to, message) {
-            fetch('/api/send-sms', {
+            fetch('/sms/api/message', {
                 method: 'POST',
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ from, to, message })
+                body: JSON.stringify({from_num: from, to_num: to, body: message })
             })
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('response-message').innerText = data.message;
+            .then(response => {
+                if(response.ok) {
+                    document.getElementById('response-message').innerText = "SMS sent successfully";
+                } else {
+                    document.getElementById('response-message').innerText = "Failed to send SMS";
+                }
             })
             .catch(error => {
-                document.getElementById('response-message').innerText = "Failed to send SMS.";
+                document.getElementById('response-message').innerText = "Failed to send SMS";
             });
         }
 

@@ -15,7 +15,7 @@ import jakarta.ws.rs.core.Context;
 import java.util.List;
 import java.util.Date;
 import twilioWebApp.service.Impl.OutMessageServiceImpl; 
-
+import twilioWebApp.model.TwilioAccount;
 
 @Path("/message")
 public class MessageController {
@@ -45,6 +45,9 @@ public class MessageController {
 
         TwilioServiceImpl twilioService = new TwilioServiceImpl();
         try {
+            TwilioAccount twilio = twilioService.findByUserId(userId);
+            twilio.setNumber_of_msg(twilio.getNumber_of_msg() + 1);
+            twilioService.update(twilio);
             twilioService.sendSms(msg);
         } catch (HibernateException e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();

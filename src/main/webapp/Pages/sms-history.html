@@ -79,14 +79,37 @@
     </div>
 
     <script>
+        let userData = null;
+        let smsData = null;
         document.addEventListener('DOMContentLoaded', function() {
-            fetchSMSHistory();
+            fetch('/sms/api/user/checkSession')
+            .then(async response => {
+                if(response.ok) {
+                    userData = await response.json();
+                    return fetch('/sms/api/message/' + userData.id);
+                } else {
+                    console.error('Error fetching user session:', response.statusText);
+                    return null;
+                }
+            })
+            .then(response => {
+                if (response && response.ok) {
+                    return response.json();
+                } else {
+                    console.error('Error fetching SMS history:', response ? response.statusText : 'No response');
+                    return [];
+                }
+            })
+            .then(data => {
+                smsData = data;
+                fetchSMSHistory();
+            })
+            .catch(error => {
+                console.error('Error fetching SMS history:', error);
+            });
         });
 
-        let smsData = [
-            { id: 1, to: "+123456789", message: "Hello there!", date: "2025-02-17 10:00" },
-            { id: 2, to: "+987654321", message: "Good morning!", date: "2025-02-16 09:30" }
-        ];
+        
         
         let deleteId = null;
 
@@ -94,14 +117,15 @@
             const historyContainer = document.getElementById("sms-history");
             historyContainer.innerHTML = "";
 
-            if (filteredData.length > 0) {
+            if (filteredData && filteredData.length > 0) {
                 filteredData.forEach(sms => {
                     const smsItem = document.createElement("div");
                     smsItem.classList.add("sms-item");
                     smsItem.innerHTML = `
-                        <p><strong>To:</strong> ${sms.to} <br>
-                        <strong>Message:</strong> ${sms.message} <br>
-                        <strong>Date:</strong> ${sms.date}</p>
+                        <p><strong>From:</strong> ${sms.from_num} <br>
+                        <p><strong>To:</strong> ${sms.to_num} <br>
+                        <strong>Message:</strong> ${sms.body} <br>
+                        <strong>Date:</strong> ${sms.msg_date.split("T")[0]}</p>
                         <button style="background-color: red; margin-bottom: 5px;" onclick="openPopup(${sms.id})" class="delete-button">
                             <i class="fas fa-trash-alt"></i> Delete
                         </button>
@@ -126,23 +150,55 @@
 
         function confirmDelete() {
             if (deleteId !== null) {
-                smsData = smsData.filter(sms => sms.id !== deleteId);
-                fetchSMSHistory();
+                fetch('/sms/api/message/' + deleteId, {
+                    method: 'DELETE',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        smsData = smsData.filter(sms => sms.id !== deleteId);
+                        fetchSMSHistory();
+                    } else {
+                        console.error('Error deleting SMS:', response.statusText);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error deleting SMS:', error);
+                });
             }
             closePopup();
         }
-
+        function convertDateFormat(dateString) {
+            // Split the date string into components
+            const [year, day, month] = dateString.split('-');
+            
+            // Rearrange the components to YYYY-MM-DD
+            const formattedDate = `${year}-${month}-${day}`;
+            
+            return formattedDate;
+        }
         function searchSMS() {
             const senderSearch = document.getElementById("search-sender").value.trim();
             const messageSearch = document.getElementById("search-message").value.trim().toLowerCase();
             const dateSearch = document.getElementById("search-date").value.trim();
 
             const filteredData = smsData.filter(sms => {
-                const smsDate = sms.date.split(" ")[0]; 
+                let smsDate = null;
+                try {
+                    const cleanDate = sms.msg_date.replace('[UTC]', '');
+                    smsDate = new Date(cleanDate).toISOString().split("T")[0];
+                    smsDate = convertDateFormat(smsDate);
+                } catch (error) {
+                    console.error('Invalid date format:', sms.msg_date, error);
+                    return false;
+                }
 
                 return (
-                    (!senderSearch || sms.to.includes(senderSearch)) &&
-                    (!messageSearch || sms.message.toLowerCase().includes(messageSearch)) &&
+                    (!senderSearch || sms.to_num.includes(senderSearch)) && 
+                    (!messageSearch || sms.body.toLowerCase().includes(messageSearch)) &&
                     (!dateSearch || smsDate === dateSearch)
                 );
             });
