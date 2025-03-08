@@ -119,3 +119,7 @@ const date = new Date()
 | GET | `/sms/api/message` | Get all messages | None | List<OutboundMsg> | 200 OK / 400 Bad Request / 401 UNAUTHORIZED | Admin |
 | GET | `/sms/api/message/{userId}` | Get messages by user | None | List<OutboundMsg> | 200 OK / 400 Bad Request / 401 UNAUTHORIZED | Admin/User himself |
 | DELETE | `/sms/api/message/{msgId}` | Delete message | None | None | 200 OK / 400 Bad Request | Admin/User himself |
+
+## Future Enhancements
+- [ ] Add Twilio Inbound message feature.
+
