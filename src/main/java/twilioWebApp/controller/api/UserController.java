@@ -57,6 +57,7 @@ public class UserController {
                            .entity("You must be logged in to access this resource").build();
         }
         String role = (String) session.getAttribute("role");
+        
         if (role.equals("admin") || session.getAttribute("id").equals(userId)) {
             return Response.ok(userService.findById(userId)).build();
         } else {
@@ -94,6 +95,7 @@ public class UserController {
             HttpSession session = request.getSession(true);
             session.setAttribute("role", retUser.getRole());
             session.setAttribute("id", retUser.getId());
+            session.setAttribute("password", retUser.getPasswd());
             TwilioAccount userData = new TwilioServiceImpl().findByUserId(retUser.getId());
             if(userData != null){
                 session.setAttribute("isVerified", userData.getIsVerified());
@@ -144,9 +146,11 @@ public class UserController {
         }
         String role = (String) session.getAttribute("role");
         Integer userId = (Integer) session.getAttribute("id");
+        String password = (String) session.getAttribute("password");
         if (role.equals("admin") || userId.equals(id)) {
             user.setRole("customer");
             user.setId(id);
+            user.setPasswd(password);
             userService.update(user);
             return Response.ok(user).build();
         } else {
