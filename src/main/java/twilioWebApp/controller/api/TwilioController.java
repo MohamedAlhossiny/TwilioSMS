@@ -39,6 +39,7 @@ public class TwilioController {
         }
         twilio.setIsVerified(false);
         twilio.setUser_id(userId);
+        twilio.setNumber_of_msg(0);
         try {
             twilioService.save(twilio);
         } catch (HibernateException e) {
@@ -67,6 +68,7 @@ public class TwilioController {
             return Response.status(Response.Status.BAD_REQUEST).entity("Twilio account not found to update").build();
         }
         twilio.setId(twilioAccount.getId());
+        twilio.setNumber_of_msg(twilioAccount.getNumber_of_msg());
             twilioService.update(twilio);
         } catch (HibernateException e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();

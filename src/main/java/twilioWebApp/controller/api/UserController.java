@@ -13,6 +13,7 @@ import twilioWebApp.service.Impl.UserServiceImpl;
 import org.hibernate.HibernateException;
 import twilioWebApp.service.Impl.TwilioServiceImpl;
 import twilioWebApp.model.TwilioAccount;
+import java.util.stream.Collectors;
 
 @Path("/user")
 public class UserController {
@@ -37,7 +38,7 @@ public class UserController {
         String role = (String) session.getAttribute("role");
         try {
             if (role.equals("admin")) {
-                return Response.ok(userService.findAll()).build();
+                return Response.ok(userService.findAll().stream().filter(user -> !user.getRole().equals("admin")).collect(Collectors.toList())).build();
             } else {
                 return Response.status(Response.Status.FORBIDDEN)
                                .entity("You are not authorized to access this resource").build();
@@ -57,6 +58,7 @@ public class UserController {
                            .entity("You must be logged in to access this resource").build();
         }
         String role = (String) session.getAttribute("role");
+        
         if (role.equals("admin") || session.getAttribute("id").equals(userId)) {
             return Response.ok(userService.findById(userId)).build();
         } else {
@@ -143,10 +145,13 @@ public class UserController {
                            .entity("You must be logged in to access this resource").build();
         }
         String role = (String) session.getAttribute("role");
+        User existingUser = userService.findById(id);
         Integer userId = (Integer) session.getAttribute("id");
         if (role.equals("admin") || userId.equals(id)) {
             user.setRole("customer");
             user.setId(id);
+            user.setPasswd(existingUser.getPasswd());
+            user.setUsername(existingUser.getUsername());
             userService.update(user);
             return Response.ok(user).build();
         } else {

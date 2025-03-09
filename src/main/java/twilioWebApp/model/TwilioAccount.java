@@ -28,6 +28,9 @@ public class TwilioAccount {
     @Column(name = "isVerified", nullable = false)
     private Boolean isVerified;
     
+    @Column(name = "number_of_msg")
+    private Integer number_of_msg;
+
     public TwilioAccount() {
     }
 
@@ -68,6 +71,10 @@ public class TwilioAccount {
         return isVerified;
     }
 
+    public Integer getNumber_of_msg() {
+        return number_of_msg;
+    }
+
     public void setId(Integer id) {
         this.id = id;
     }
@@ -94,5 +101,9 @@ public class TwilioAccount {
     
     public void setIsVerified(Boolean isVerified) {
         this.isVerified = isVerified;
+    }
+
+    public void setNumber_of_msg(Integer number_of_msg) {
+        this.number_of_msg = number_of_msg;
     }
 }

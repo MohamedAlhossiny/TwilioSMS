@@ -1,5 +1,6 @@
 let currentUserId = null;
 let currentTwilioId = null;
+let currentUsername = null;
 document.addEventListener("DOMContentLoaded", function () {
     const profileForm = document.getElementById("profile-form");
 
@@ -21,8 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 currentUserId = user.id;
                 console.log(user);
             }
-        }
-                )
+        })
         .catch(error => {
             console.error('Error checking session:', error);
         });
@@ -48,27 +48,22 @@ document.addEventListener("DOMContentLoaded", function () {
 //        console.log(user);
         console.log(twilio);
 
-        document.getElementById("name").value = user.full_name;
-        document.getElementById("dob").value = user.birth_date;
-        document.getElementById("email").value = user.email;
-        document.getElementById("address").value = user.address;
-        document.getElementById("phone").value = twilio.phone_number;
-        document.getElementById("twilio-sid").value = twilio.sid;
-        document.getElementById("twilio-token").value = twilio.token;
-        document.getElementById("twilio-sender").value = twilio.sender_id;
+        
     }
 
     loadProfileData();
 
     profileForm.addEventListener("submit", function (event) {
         event.preventDefault();
-
+        clearMessage();
+        let date = new Date(document.getElementById("dob").value);
         const updatedUser = {
             full_name: document.getElementById("name").value.trim(),
-            birth_date: document.getElementById("dob").value.toISOString()  // Converts to format: 2000-09-05T21:00:00.000Z
+            birth_date: date.toISOString()  // Converts to format: 2000-09-05T21:00:00.000Z
             .replace('.000', '') + '[UTC]',  // Removes milliseconds and adds [UTC],
             email: document.getElementById("email").value.trim(),
             address: document.getElementById("address").value.trim(),
+            username: currentUsername
         };
 
         const updatedTwilio = {
@@ -76,7 +71,7 @@ document.addEventListener("DOMContentLoaded", function () {
             sid: document.getElementById("twilio-sid").value.trim(),
             token: document.getElementById("twilio-token").value.trim(),
             sender_id: document.getElementById("twilio-sender").value.trim(),
-            user_id: user.id
+            user_id: currentUserId
         };
 
         if (!updatedUser.full_name || !updatedUser.email || !updatedUser.address) {
@@ -88,9 +83,12 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
         
-        fetch('/sms/api/user/'+currentUserId,
+        fetch('/sms/api/user/' + currentUserId,
             {
                 method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
                 body: JSON.stringify(updatedUser),
                 credentials: 'include'
             }
@@ -103,10 +101,15 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .catch(error => {
             console.error('Error updating user:', error);
+            return;
         });
+        
         fetch('/sms/api/twilio/',
             {
                 method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
                 body: JSON.stringify(updatedTwilio),
                 credentials: 'include'
             }
@@ -119,6 +122,7 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .catch(error => {
             console.error('Error updating twilio:', error);
+            return;
         });
         showMessage("Profile updated successfully!", "success");
     });

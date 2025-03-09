@@ -72,6 +72,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 phone_number
             };
             registerAndLoginUser(userInfo, twilioInfo);
+            
         
         }
     );
@@ -154,7 +155,7 @@ async function registerAndLoginUser(userInfo, twilioInfo) {
         
         // Redirect after 2 seconds
         setTimeout(() => {
-            window.location.href = '/sms/Pages/customer.html';
+            window.location.href = '/sms/Pages/verification.html';
         }, 2000);
 
     } catch (error) {
