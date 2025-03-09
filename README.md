@@ -79,46 +79,6 @@ const date = new Date()
                 .toISOString()  // Converts to format: 2000-09-05T21:00:00.000Z
                 .replace('.000', '') + '[UTC]';  // Removes milliseconds and adds [UTC]
 ```
-## API Endpoints
-
-### User Management
-
-| Method | Endpoint | Description | Request Body | Response Body | Response Status | Permissions |
-|--------|----------|-------------|--------------|---------------|-----------------|-------------|
-| GET | `/sms/api/user` | Get all users | None | List<User> | 200 OK / 401 UNAUTHORIZED for who are not admins | Admin |
-| GET | `/sms/api/user/checkSession` | Check if session is expired | None | None | 200 OK / 401 Unauthorized | Public |
-| POST | `/sms/api/user/logout` | Logout user session | None | None | 200 OK | Public | 
-| POST | `/sms/api/user/login` | User login | `{username: string, passwd: string}` | User | 200 OK / 401 Unauthorized for incorrect user username or password | Public |
-| GET | `/sms/api/user/{userId}` | Get user by ID | None | User | 200 OK / 401 UNAUTHORIZED | Admin/User himself |
-| POST | `/sms/api/user` | Register new user | `{username: string, passwd: string, full_name: string, email: string, address: string, birth_date: string, job: string}` | User | 200 OK / 400 Bad Request | Public |
-| PUT | `/sms/api/user/{userId}` | Update user | User object | User | 200 OK / 403 Forbidden | Admin/User himself |
-| DELETE | `/sms/api/user/{userId}` | Delete user | None | None | 200 OK / 403 Forbidden | Admin/User himself |
-
-### Twilio Integration
-
-| Method | Endpoint | Description | Request Body | Response Body | Response Status | Permissions |
-|--------|----------|-------------|--------------|---------------|-----------------|-------------|
-| POST | `/sms/api/twilio` | Register Twilio account | `{sid: string, auth_token: string, sender_id: string, phone_number: string}` | None | 200 OK / 400 Bad Request / 401 UNAUTHORIZED | Public |
-| GET | `/sms/api/twilio/{userId}` | Get Twilio by user ID | None | Twilio | 200 OK / 404 Not Found | Admin/User himself |
-| PUT | `/sms/api/twilio/` | Update Twilio account | Twilio object | None | 200 OK / 400 Bad Request / 401 UNAUTHORIZED | User himself |
-| DELETE | `/sms/api/twilio/{twilioId}` | Delete Twilio account | None | None | 200 OK / 400 Bad Request / 400 Bad Request / 401 UNAUTHORIZED | User himself |
-| GET | `/sms/api/twilio/accounts` | Get all Twilio accounts | None | List<Twilio> | 200 OK / 400 Bad Request / 401 UNAUTHORIZED | Admin |
-
-### Verification Services
-
-| Method | Endpoint | Description | Request Body | Response Body | Response Status | Permissions |
-|--------|----------|-------------|--------------|---------------|-----------------|-------------|
-| POST | `/sms/api/verificationCode/send` | Send verification code | None | None | 200 OK (sent) / 400 Bad Request / 401 UNAUTHORIZED | User himself |
-| POST | `/sms/api/verificationCode/verify` | Verify code | `{verification_code: Integer}` | None | 200 OK (verified) / 400 Bad Request (Not verified) | User himself |
-
-### Message Handling
-
-| Method | Endpoint | Description | Request Body | Response Body | Response Status | Permissions |
-|--------|----------|-------------|--------------|---------------|-----------------|-------------|
-| POST | `/sms/api/message` | Send message | `{from_num: string, to_num: string, body: string}` | OutboundMsg | 200 OK / 400 Bad Request / 401 UNAUTHORIZED | User himself |
-| GET | `/sms/api/message` | Get all messages | None | List<OutboundMsg> | 200 OK / 400 Bad Request / 401 UNAUTHORIZED | Admin |
-| GET | `/sms/api/message/{userId}` | Get messages by user | None | List<OutboundMsg> | 200 OK / 400 Bad Request / 401 UNAUTHORIZED | Admin/User himself |
-| DELETE | `/sms/api/message/{msgId}` | Delete message | None | None | 200 OK / 400 Bad Request | Admin/User himself |
 
 ## Future Enhancements
 - [ ] Add Twilio Inbound message feature.
