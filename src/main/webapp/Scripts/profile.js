@@ -21,7 +21,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 currentUserId = user.id;
                 console.log(user);
             }
-        })
+        }
+                )
         .catch(error => {
             console.error('Error checking session:', error);
         });
@@ -44,6 +45,8 @@ document.addEventListener("DOMContentLoaded", function () {
         .catch(error => {
             console.error('Error checking session:', error);
         });
+//        console.log(user);
+        console.log(twilio);
 
         document.getElementById("name").value = user.full_name;
         document.getElementById("dob").value = user.birth_date;
