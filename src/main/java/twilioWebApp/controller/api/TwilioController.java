@@ -63,7 +63,7 @@ public class TwilioController {
         }
         try {
         TwilioAccount twilioAccount = twilioService.findByUserId(userId);
-        twilio.setIsVerified(twilioAccount.getIsVerified);// set it as previous state, We need to verify the data again...
+        twilio.setIsVerified(twilioAccount.getIsVerified());// set it as previous state, We need to verify the data again...
         if(twilioAccount == null) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Twilio account not found to update").build();
         }
