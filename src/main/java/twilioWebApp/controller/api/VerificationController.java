@@ -94,7 +94,7 @@ public class VerificationController {
             }
             
             // Update session and clean up verification codes
-            session.setAttribute("verified", true);
+            session.setAttribute("isVerified", true);
             verificationCodeService.deleteAllCodesByUser(userId);
             
             // Update Twilio account verification status
