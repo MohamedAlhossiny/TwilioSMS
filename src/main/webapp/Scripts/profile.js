@@ -4,51 +4,62 @@ let currentUsername = null;
 document.addEventListener("DOMContentLoaded", function () {
     const profileForm = document.getElementById("profile-form");
 
-    function loadProfileData() {
-        let user = null;
-        let twilio = null;
+    async function loadProfileData() {
         clearMessage();
-        fetch('/sms/api/user/checkSession',
-            {
+        try {
+            // First fetch user data
+            const userResponse = await fetch('/sms/api/user/checkSession', {
                 method: 'GET',
                 credentials: 'include'
-            }
-        )
-        .then(async response => {
-            if (!response.ok) {
-                window.location.href = "/sms/Pages/index.html";
-            }else{
-                user = await response.json();
-                currentUserId = user.id;
-                console.log(user);
-            }
-        })
-        .catch(error => {
-            console.error('Error checking session:', error);
-        });
+            });
 
-        fetch('/sms/api/twilio/'+user.id,
-            {
+            if (!userResponse.ok) {
+                window.location.href = "/sms/Pages/index.html";
+                return;
+            }
+
+            const user = await userResponse.json();
+            currentUserId = user.id;
+            currentUsername = user.username;
+            console.log("User data:", user);
+
+            // Populate user data
+            document.getElementById("name").value = user.full_name || '';
+            document.getElementById("email").value = user.email || '';
+            document.getElementById("address").value = user.address || '';
+            
+            // Format and set date of birth
+            if (user.birth_date) {
+                const date = new Date(user.birth_date);
+                const formattedDate = date.toISOString().split('T')[0];
+                document.getElementById("dob").value = formattedDate;
+            }
+
+            // Then fetch Twilio data using the currentUserId
+            const twilioResponse = await fetch('/sms/api/twilio/' + currentUserId, {
                 method: 'GET',
                 credentials: 'include'
-            }
-        )
-        .then(async response => {
-            if (!response.ok) {
-                window.location.href = "/sms/Pages/index.html";
-            }else{
-                twilio = await response.json();
-                currentTwilioId = twilio.id;
-                console.log(twilio);
-            }
-        })
-        .catch(error => {
-            console.error('Error checking session:', error);
-        });
-//        console.log(user);
-        console.log(twilio);
+            });
 
-        
+            if (!twilioResponse.ok) {
+                window.location.href = "/sms/Pages/index.html";
+                return;
+            }
+
+            const twilio = await twilioResponse.json();
+            currentTwilioId = twilio.id;
+            console.log("Twilio data:", twilio);
+
+            // Populate Twilio data
+            document.getElementById("phone").value = twilio.phone_number || '';
+            document.getElementById("twilio-sid").value = twilio.sid || '';
+            document.getElementById("twilio-token").value = twilio.token || '';
+            document.getElementById("twilio-sender").value = twilio.sender_id || '';
+
+        } catch (error) {
+            console.error('Error loading profile data:', error);
+            showMessage("Error loading profile data. Please try again.", "error");
+        }
     }
 
     loadProfileData();

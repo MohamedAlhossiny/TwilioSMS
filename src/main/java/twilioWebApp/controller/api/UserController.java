@@ -1,19 +1,27 @@
 package twilioWebApp.controller.api;
 
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Context;
-import jakarta.servlet.http.HttpSession;
-import jakarta.servlet.http.HttpServletRequest;
-import twilioWebApp.model.User;
-import twilioWebApp.service.UserService;
-import twilioWebApp.service.Impl.UserServiceImpl;
-import org.hibernate.HibernateException;
-import twilioWebApp.service.Impl.TwilioServiceImpl;
-import twilioWebApp.model.TwilioAccount;
 import java.util.stream.Collectors;
+
+import org.hibernate.HibernateException;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import twilioWebApp.model.TwilioAccount;
+import twilioWebApp.model.User;
+import twilioWebApp.service.Impl.TwilioServiceImpl;
+import twilioWebApp.service.Impl.UserServiceImpl;
+import twilioWebApp.service.UserService;
 
 @Path("/user")
 public class UserController {
