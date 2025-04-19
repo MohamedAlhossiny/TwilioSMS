@@ -73,6 +73,6 @@ CREATE TABLE InboundMsg (
 );
 
 -- Create a user with admin privileges
-INSERT INTO twiliodb.user VALUES(1, 'System Admin', 'admin', 'admin', 'Telecom Eng.', '2000-09-06', 'admin@example.com', 'Cairo, Egypt', 'admin');
+INSERT INTO twiliodb.User VALUES(1, 'System Admin', 'admin', 'admin', 'Telecom Eng.', '2000-09-06', 'admin@example.com', 'Cairo, Egypt', 'admin');
 
 
