@@ -26,7 +26,7 @@ CREATE TABLE TwilioAccount (
     user_id       INT,
     CONSTRAINT fk_twilio_user
         FOREIGN KEY (user_id)
-        REFERENCES user(id)
+        REFERENCES User(id)
         ON DELETE CASCADE
 );
 
@@ -40,7 +40,7 @@ CREATE TABLE VerificationCode (
     user_id            INT,
     CONSTRAINT fk_vcode_user
         FOREIGN KEY (user_id)
-        REFERENCES user(id)
+        REFERENCES User(id)
         ON DELETE CASCADE
 );
 
@@ -54,7 +54,7 @@ CREATE TABLE OutboundMsg (
     user_id    INT,
     CONSTRAINT fk_sendmsg_user
         FOREIGN KEY (user_id)
-        REFERENCES user(id)
+        REFERENCES User(id)
         ON DELETE CASCADE
 );
 
@@ -68,7 +68,7 @@ CREATE TABLE InboundMsg (
     user_id    INT,
     CONSTRAINT fk_inboundmsg_user
         FOREIGN KEY (user_id)
-        REFERENCES user(id)
+        REFERENCES User(id)
         ON DELETE CASCADE
 );
 
