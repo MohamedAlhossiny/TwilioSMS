@@ -1,4 +1,4 @@
-CREATE DATABASE twiliodb;
+
 use twiliodb;
 -- Users table (renamed to avoid reserved words)
 

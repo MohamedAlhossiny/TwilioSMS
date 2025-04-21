@@ -1,0 +1,26 @@
+# Git
+.git
+.gitignore
+
+# Maven
+.mvn/
+mvnw
+mvnw.cmd
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+nb-configuration.xml
+
+# Logs
+logs/
+*.log
+
+# Build directories
+node_modules/
+
+# Docker files
+docker/ 
